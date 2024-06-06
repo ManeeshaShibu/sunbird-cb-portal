@@ -45,7 +45,7 @@
                 <div *ngIf="checkCondition(widgetData , stripsResultDataMap[key])"
                   class="ml-4 view-more ws-mat-default-text">
                   <a class="flex ws-mat-default-text items-center justify-center mat-body-1" [routerLink]="stripsResultDataMap[key]?.viewMoreUrl?.path"
-                    [queryParams]="stripsResultDataMap[key]?.viewMoreUrl?.queryParams">
+                    [queryParams]="stripsResultDataMap[key]?.viewMoreUrl?.queryParams"(click)="trackSeeAllTelemetry(stripsResultDataMap[key].striptitle)">
                     <span i18n class="ws-mat-default-text">{{translateLabels(widgetData.strips[0].viewMoreUrl.viewMoreText,'home')  || 'See all'}}</span>
                     <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color" color="accent">navigate_next</mat-icon>
                   </a>

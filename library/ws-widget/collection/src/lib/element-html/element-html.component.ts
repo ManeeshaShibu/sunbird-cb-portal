@@ -4,6 +4,7 @@ import { IWidgetElementHtml } from './element-html.model'
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser'
 import mustache from 'mustache'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { TranslateService } from '@ngx-translate/core'
 @Component({
   selector: 'ws-widget-element-html',
   templateUrl: './element-html.component.html',
@@ -13,14 +14,15 @@ export class ElementHtmlComponent extends WidgetBaseComponent
   implements OnInit, NsWidgetResolver.IWidgetData<IWidgetElementHtml> {
   @Input() widgetData!: IWidgetElementHtml
   html: SafeHtml | null = null
-  constructor(private domSanitizer: DomSanitizer, private http: HttpClient) {
+  constructor(private domSanitizer: DomSanitizer, private http: HttpClient,private translate: TranslateService) {
     super()
   }
 
   async ngOnInit() {
     const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8')
     if (this.widgetData.html) {
-      this.html = this.domSanitizer.bypassSecurityTrustHtml(this.widgetData.html)
+      const translatedHtml = await this.translateHTML(this.widgetData.html)
+      this.html = this.domSanitizer.bypassSecurityTrustHtml(translatedHtml)
     } else if (this.widgetData.template && this.widgetData.templateData) {
       this.render(this.widgetData.template, this.widgetData.templateData)
     } else if (this.widgetData.template && this.widgetData.templateDataUrl) {
@@ -46,12 +48,35 @@ export class ElementHtmlComponent extends WidgetBaseComponent
       } catch (er) { }
     }
   }
-
-  render(template: string, templateData: any) {
-    const data = {
-      ...templateData,
-      __pageBase: `.${location.pathname}`.split('#')[0],
+  async translateHTML(html: string): Promise<string> {
+    const translations = {
+    "Moderated Courses, Moderated Programs and Moderated Assessments for you.": "moderatedCoursesHTML",
+    "Blended programs for you.": "blendedProgramsHtml",
+    "Curated Programs.": "curatedPrograms",
+    "Featured courses": "featuredCoursesHTML",
+    "Standalone Assessment": "standaloneAssessmentHTML",
+    "Recently added for you.": "recentlyAddedHtml"
     }
-    this.html = this.domSanitizer.bypassSecurityTrustHtml(mustache.render(template, data))
+    
+    for (const [originalText, translationKey] of Object.entries(translations)) {
+    const translatedText = await this.translate.get(`contentstripmultiple.${translationKey}`).toPromise();
+    html = html.replace(originalText, translatedText);
+    }
+    console.log('Translated HTML:', html);
+    return html;
+    }
+    
+    render(template: string, templateData: any) {
+    const data = {
+    ...templateData,
+    __pageBase: `.${location.pathname}`.split('#')[0],
+    translate: (key: string) => this.translate.instant(key),
+    };
+    const translatedTemplate = this.translate.instant(template);
+    this.html = this.domSanitizer.bypassSecurityTrustHtml(mustache.render(translatedTemplate, data));
+  }
+    changeLanguage(language: string) {
+    this.translate.use(language)
   }
 }
+

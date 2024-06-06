@@ -22,6 +22,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { NSSearch } from '@sunbird-cb/collection'
 import { SearchApiService } from '../_services/search-api.service'
+import { ElementRef } from '@angular/core'
 
 interface IStripUnitContentData {
   key: string
@@ -84,7 +85,8 @@ export class ContentStripMultipleComponent extends WidgetBaseComponent
     private userSvc: WidgetUserService,
     private http: HttpClient,
     private searchApiService: SearchApiService,
-    private langtranslations: MultilingualTranslationsService
+    private langtranslations: MultilingualTranslationsService,
+    private elRef: ElementRef
   ) {
     super()
   }
@@ -1163,6 +1165,14 @@ export class ContentStripMultipleComponent extends WidgetBaseComponent
     this.showParentError = this.errorDataCount === totalCount
   }
 
+  translateTooltip() {
+    const tooltipElement = this.elRef.nativeElement.querySelector('[matTooltip="contentstripmultiple.info"]');
+    if (tooltipElement) {
+      const translatedTooltip = this.langtranslations.translateLabelWithoutspace('info', 'contentstripmultiple', '');
+      tooltipElement.setAttribute('matTooltip', translatedTooltip);
+    }
+  }
+
   toggleInfo(data: IStripUnitContentData) {
     const stripInfo = this.stripsResultDataMap[data.key].stripInfo
     if (stripInfo) {
@@ -1176,8 +1186,10 @@ export class ContentStripMultipleComponent extends WidgetBaseComponent
           visibilityMode: stripInfo.visibilityMode === 'hidden' ? 'visible' : 'hidden',
         }
       }
+      this.translateTooltip()
     }
   }
+
 
   checkForEmptyWidget(strip: NsContentStripMultiple.IContentStripUnit): boolean {
     if (

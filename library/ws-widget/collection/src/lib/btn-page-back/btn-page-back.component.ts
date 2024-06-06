@@ -186,5 +186,8 @@ export class BtnPageBackComponent extends WidgetBaseComponent
   translateLabels(label: string, type: any, subtype: any) {
     return this.langtranslations.translateLabel(label, type, subtype)
   }
+  changeLanguage(language: string) {
+    this.translate.use(language)
+ }
 
 }

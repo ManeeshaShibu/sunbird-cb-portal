@@ -185,6 +185,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.enrollInterval = setInterval(() => {
       this.getEnrollmentData()
     },                                1000)
+
+    if (localStorage.getItem('websiteLanguage')) {
+      this.translate.setDefaultLang('en')
+      const lang = localStorage.getItem('websiteLanguage')!
+      this.translate.use(lang)
+    }
   }
 
   ngAfterViewInit() {
@@ -338,4 +344,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   closeKarmaPointsPanel() {
     this.isKPPanelenabled = false
   }
+
+  changeLanguage(language: string) {
+    this.translate.use(language)
+ }
 }

@@ -56,6 +56,7 @@ export class FooterSectionComponent implements OnInit {
     if (this.footerSectionConfig) {
       this.footerSectionConfig = (this.footerSectionConfig).sort((a, b) => a.order - b.order)
     }
+
     this.environment.portals = this.environment.portals.filter(
       (obj: any) => ((obj.name !== 'Frac Dictionary') &&
        (obj.isPublic || this.isAllowed(obj.id))))
