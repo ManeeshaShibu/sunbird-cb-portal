@@ -9,17 +9,13 @@ import {
 // tslint:disable-next-line
 import * as _ from 'lodash'
 import {
-  SeeAllService,
-} from '../../services/see-all.service'
-import {
   NsContentStripWithTabs,
 } from '@sunbird-cb/collection/src/lib/content-strip-with-tabs/content-strip-with-tabs.model'
 import {
   NsContent,
 } from '@sunbird-cb/collection/src/lib/_services/widget-content.model'
-import {
-  ConfigurationsService, EventService, MultilingualTranslationsService, WsEvents,
-} from '@sunbird-cb/utils'
+import { ConfigurationsService, EventService, MultilingualTranslationsService, WsEvents } from '@sunbird-cb/utils-v2'
+import { SeeAllService } from '../../services/see-all.service'
 import { WidgetUserService } from '@sunbird-cb/collection/src/lib/_services/widget-user.service'
 import { MatTabChangeEvent } from '@angular/material'
 
